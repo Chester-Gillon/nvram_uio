@@ -30,3 +30,18 @@
 
 # Debug files
 *.dSYM/
+
+# Eclipse meta data
+.metadata
+.settings
+
+# Backup files
+*~
+
+# driver build artifacts
+driver/*.cmd
+Module.symvers
+modules.order
+*.mod.c
+*.ko.unsigned
+driver/.tmp_versions
