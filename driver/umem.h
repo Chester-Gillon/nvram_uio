@@ -12,6 +12,8 @@
 #ifndef _DRIVERS_BLOCK_MM_H
 #define _DRIVERS_BLOCK_MM_H
 
+#define DRIVER_NAME "nvram_uio"
+#define CSR_MAPPING_INDEX 0
 
 #define IRQ_TIMEOUT (1 * HZ)
 
@@ -115,13 +117,13 @@ struct mm_dma_desc {
 	__le64	pci_addr;
 	__le64	local_addr;
 	__le32	transfer_size;
-	u32	zero1;
+	__u32	zero1;
 	__le64	next_desc_addr;
 	__le64	sem_addr;
 	__le32	control_bits;
-	u32	zero2;
+	__u32	zero2;
 
-	dma_addr_t data_dma_handle;
+	__u64 data_dma_handle;
 
 	/* Copy of the bits */
 	__le64	sem_control_bits;

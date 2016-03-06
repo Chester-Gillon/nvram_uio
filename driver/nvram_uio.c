@@ -7,8 +7,6 @@
 
 #include "umem.h"
 
-#define DRIVER_NAME "nvram_uio"
-
 static struct pci_device_id nvram_uio_pci_ids[] __devinitdata =
 {
     {PCI_DEVICE(PCI_VENDOR_ID_MICRO_MEMORY, PCI_DEVICE_ID_MICRO_MEMORY_5425CN)},
@@ -27,7 +25,7 @@ static int __devinit nvram_uio_pci_probe (struct pci_dev *dev,
     unsigned long csr_base;
     unsigned long csr_len;
     int magic_number;
-    int magic_numbers[MAGIC_NUMBERS_PER_DEV] = {0};
+    int magic_numbers[MAGIC_NUMBERS_PER_DEV];
     int magic_number_ok = 0;
     int i;
 
@@ -67,18 +65,19 @@ static int __devinit nvram_uio_pci_probe (struct pci_dev *dev,
         goto out_release;
     }
 
-    info->mem[0].addr = csr_base;
-    info->mem[0].internal_addr = ioremap_nocache (csr_base, csr_len);
-    if (!info->mem[0].internal_addr)
+    info->mem[CSR_MAPPING_INDEX].addr = csr_base;
+    info->mem[CSR_MAPPING_INDEX].internal_addr = ioremap_nocache (csr_base, csr_len);
+    if (!info->mem[CSR_MAPPING_INDEX].internal_addr)
     {
         dev_printk (KERN_ERR, &dev->dev, "Unable to remap memory region\n");
         goto out_release;
     }
-    info->mem[0].size = csr_len;
-    info->mem[0].memtype = UIO_MEM_PHYS;
+    info->mem[CSR_MAPPING_INDEX].size = csr_len;
+    info->mem[CSR_MAPPING_INDEX].memtype = UIO_MEM_PHYS;
+    info->mem[CSR_MAPPING_INDEX].name = "csr";
 
     dev_printk (KERN_INFO, &dev->dev, "CSR 0x%08lx -> 0x%p (0x%lx)\n",
-            info->mem[0].addr, info->mem[0].internal_addr, info->mem[0].size);
+            info->mem[CSR_MAPPING_INDEX].addr, info->mem[CSR_MAPPING_INDEX].internal_addr, info->mem[CSR_MAPPING_INDEX].size);
 
     switch (dev->device) {
     case 0x5415:
@@ -145,11 +144,11 @@ static void nvram_uio_pci_remove (struct pci_dev *dev)
 {
     struct uio_info *info = pci_get_drvdata(dev);
 
-    uio_unregister_device(info);
-    pci_release_regions(dev);
-    pci_disable_device(dev);
-    pci_set_drvdata(dev, NULL);
-    iounmap(info->mem[0].internal_addr);
+    uio_unregister_device (info);
+    pci_release_regions (dev);
+    pci_disable_device (dev);
+    pci_set_drvdata (dev, NULL);
+    iounmap (info->mem[0].internal_addr);
 
     kfree (info);
 }

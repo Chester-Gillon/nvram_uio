@@ -45,3 +45,4 @@ modules.order
 *.mod.c
 *.ko.unsigned
 driver/.tmp_versions
+Debug
