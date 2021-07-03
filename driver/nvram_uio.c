@@ -1,13 +1,13 @@
 
-//#include <linux/device.h>
-//#include <linux/module.h>
+#include <linux/device.h>
+#include <linux/module.h>
 #include <linux/pci.h>
 #include <linux/slab.h>
 #include <linux/uio_driver.h>
 
 #include "umem.h"
 
-static struct pci_device_id nvram_uio_pci_ids[] __devinitdata =
+static struct pci_device_id nvram_uio_pci_ids[] =
 {
     {PCI_DEVICE(PCI_VENDOR_ID_MICRO_MEMORY, PCI_DEVICE_ID_MICRO_MEMORY_5425CN)},
     { 0, }
@@ -18,8 +18,8 @@ static irqreturn_t nvram_uio_handler (int irq, struct uio_info *dev_info)
     return IRQ_NONE;
 }
 
-static int __devinit nvram_uio_pci_probe (struct pci_dev *dev,
-                                          const struct pci_device_id *id)
+static int nvram_uio_pci_probe (struct pci_dev *dev,
+                                const struct pci_device_id *id)
 {
     struct uio_info *info;
     unsigned long csr_base;
@@ -76,7 +76,7 @@ static int __devinit nvram_uio_pci_probe (struct pci_dev *dev,
     info->mem[CSR_MAPPING_INDEX].memtype = UIO_MEM_PHYS;
     info->mem[CSR_MAPPING_INDEX].name = "csr";
 
-    dev_printk (KERN_INFO, &dev->dev, "CSR 0x%08lx -> 0x%p (0x%lx)\n",
+    dev_printk (KERN_INFO, &dev->dev, "CSR 0x%08llx -> 0x%p (0x%llx)\n",
             info->mem[CSR_MAPPING_INDEX].addr, info->mem[CSR_MAPPING_INDEX].internal_addr, info->mem[CSR_MAPPING_INDEX].size);
 
     switch (dev->device) {

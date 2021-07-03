@@ -34,6 +34,7 @@
 # Eclipse meta data
 .metadata
 .settings
+RemoteSystemsTempFiles
 
 # Backup files
 *~
@@ -46,3 +47,4 @@ modules.order
 *.ko.unsigned
 driver/.tmp_versions
 Debug
+.cache.mk
