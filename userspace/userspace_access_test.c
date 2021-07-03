@@ -222,6 +222,7 @@ static void set_led (nvram_uio_context *const context, int shift, unsigned char 
 
 int main (int argc, char *argv[])
 {
+    const bool prompt = argc >= 2;
     nvram_uio_context context;
 
     find_uio_device (&context);
@@ -233,9 +234,29 @@ int main (int argc, char *argv[])
     printf ("memctrlcmd_ledctrl=0x%x\n", *context.memctrlcmd_ledctrl);
     printf ("memctrlcmd_errctrl=0x%x\n", *context.memctrlcmd_errctrl);
     set_led (&context, LED_FAULT, LED_ON);
+    if (prompt)
+    {
+        printf ("LED_FAULT=LED_ON (press return to continue)");
+        getchar ();
+    }
     set_led (&context, LED_FAULT, LED_FLASH_7_0);
+    if (prompt)
+    {
+        printf ("LED_FAULT=LED_FLASH_7_0 (press return to continue)");
+        getchar ();
+    }
     set_led (&context, LED_FAULT, LED_FLASH_3_5);
+    if (prompt)
+    {
+        printf ("LED_FAULT=LED_FLASH_3_5 (press return to continue)");
+        getchar ();
+    }
     set_led (&context, LED_FAULT, LED_OFF);
+    if (prompt)
+    {
+        printf ("LED_FAULT=LED_OFF (press return to continue)");
+        getchar ();
+    }
     close_uio_device (&context);
 
     return EXIT_SUCCESS;
