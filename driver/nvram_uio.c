@@ -65,6 +65,9 @@ static int nvram_uio_pci_probe (struct pci_dev *dev,
         goto out_release;
     }
 
+    /* Need to page align the mapped length as otherwise mmap() in user space can fail with EINVAL */
+    csr_len = ((csr_len + PAGE_SIZE - 1) / PAGE_SIZE) * PAGE_SIZE;
+
     info->mem[CSR_MAPPING_INDEX].addr = csr_base;
     info->mem[CSR_MAPPING_INDEX].internal_addr = ioremap_nocache (csr_base, csr_len);
     if (!info->mem[CSR_MAPPING_INDEX].internal_addr)
