@@ -229,8 +229,22 @@ int main (int argc, char *argv[])
     get_uio_device_parameters (&context);
     open_uio_device (&context);
     printf ("memctrlstatus_magic=0x%x\n", *context.memctrlstatus_magic);
-    printf ("memctrlstatus_memory=0x%x\n", *context.memctrlstatus_memory);
-    printf ("memctrlstatus_battery=0x%x\n", *context.memctrlstatus_battery);
+    printf ("memctrlstatus_memory=0x%x size ", *context.memctrlstatus_memory);
+    switch (*context.memctrlstatus_memory)
+    {
+    case MEM_128_MB: printf ("128 MB\n"); break;
+    case MEM_256_MB: printf ("256 MB\n"); break;
+    case MEM_512_MB: printf ("512 MB\n"); break;
+    case MEM_1_GB:   printf ("1GB\n"); break;
+    case MEM_2_GB:   printf ("2GB\n"); break;
+    default:         printf ("unknown\n"); break;
+    }
+    printf ("memctrlstatus_battery=0x%x Battery 1 %s (%s), Battery 2 %s (%s)\n",
+            *context.memctrlstatus_battery,
+            *context.memctrlstatus_battery & BATTERY_1_DISABLED ? "Disabled" : "Enabled",
+            !(*context.memctrlstatus_battery & BATTERY_1_FAILURE) ? "OK" : "FAILURE",
+            *context.memctrlstatus_battery & BATTERY_2_DISABLED ? "Disabled" : "Enabled",
+            !(*context.memctrlstatus_battery & BATTERY_2_FAILURE) ? "OK" : "FAILURE");
     printf ("memctrlcmd_ledctrl=0x%x\n", *context.memctrlcmd_ledctrl);
     printf ("memctrlcmd_errctrl=0x%x\n", *context.memctrlcmd_errctrl);
     set_led (&context, LED_FAULT, LED_ON);

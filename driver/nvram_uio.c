@@ -25,7 +25,7 @@ static int nvram_uio_pci_probe (struct pci_dev *dev,
     unsigned long csr_base;
     unsigned long csr_len;
     int magic_number;
-    int magic_numbers[MAGIC_NUMBERS_PER_DEV];
+    int magic_numbers[MAGIC_NUMBERS_PER_DEV + 1];
     int magic_number_ok = 0;
     int i;
 
